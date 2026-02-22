@@ -1,0 +1,110 @@
+import { Link } from 'react-router-dom';
+import { GraduationCap, Twitter, Linkedin, Github, Mail } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+
+const footerSections = [
+    {
+        title: 'Platform',
+        links: [
+            { label: 'Browse Thesis', href: '/thesis' },
+            { label: 'Thesis Ideas', href: '/ideas' },
+            { label: 'For Universities', href: '/about' },
+            { label: 'For Companies', href: '/about' },
+            { label: 'Pricing', href: '/pricing' },
+        ],
+    },
+    {
+        title: 'Resources',
+        links: [
+            { label: 'Blog', href: '/blog' },
+            { label: 'FAQ', href: '/faq' },
+            { label: 'Help Center', href: '/faq' },
+            { label: 'Contact', href: '/contact' },
+        ],
+    },
+    {
+        title: 'Legal',
+        links: [
+            { label: 'Privacy Policy', href: '/privacy' },
+            { label: 'Terms of Service', href: '/terms' },
+            { label: 'Cookie Policy', href: '/privacy' },
+        ],
+    },
+];
+
+export function Footer() {
+    return (
+        <footer className="bg-card border-t border-border/50">
+            <div className="container-wide section-padding">
+                {/* Main Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
+                    {/* Brand */}
+                    <div className="col-span-2 md:col-span-4 lg:col-span-2">
+                        <Link to="/" className="flex items-center gap-2.5 mb-4">
+                            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary text-primary-foreground">
+                                <GraduationCap className="w-5 h-5" />
+                            </div>
+                            <span className="font-display text-xl font-bold tracking-tight">
+                                ThesisHub
+                            </span>
+                        </Link>
+                        <p className="text-sm text-muted-foreground max-w-xs leading-relaxed mb-6">
+                            The premier platform connecting students with thesis opportunities
+                            at leading universities and companies across Scandinavia and Europe.
+                        </p>
+                        <div className="flex items-center gap-3">
+                            {[
+                                { icon: Twitter, label: 'Twitter', href: '#' },
+                                { icon: Linkedin, label: 'LinkedIn', href: '#' },
+                                { icon: Github, label: 'GitHub', href: '#' },
+                                { icon: Mail, label: 'Email', href: 'mailto:hello@thesishub.com' },
+                            ].map(({ icon: Icon, label, href }) => (
+                                <a
+                                    key={label}
+                                    href={href}
+                                    aria-label={label}
+                                    className="flex items-center justify-center w-9 h-9 rounded-lg border border-border/50 text-muted-foreground hover:text-foreground hover:border-border hover:bg-accent transition-all duration-150"
+                                >
+                                    <Icon className="w-4 h-4" />
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Sections */}
+                    {footerSections.map((section) => (
+                        <div key={section.title}>
+                            <h6 className="text-sm font-semibold text-foreground mb-4">
+                                {section.title}
+                            </h6>
+                            <ul className="space-y-2.5">
+                                {section.links.map((link) => (
+                                    <li key={link.label}>
+                                        <Link
+                                            to={link.href}
+                                            className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
+                                        >
+                                            {link.label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
+                </div>
+
+                <Separator className="my-8" />
+
+                {/* Bottom */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p className="text-xs text-muted-foreground">
+                        © {new Date().getFullYear()} ThesisHub. All rights reserved.
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                        Built with ❤️ in Stockholm
+                    </p>
+                </div>
+            </div>
+        </footer>
+    );
+}
