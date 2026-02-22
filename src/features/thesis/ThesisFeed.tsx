@@ -43,36 +43,46 @@ export default function ThesisFeed() {
     const count = activeFilterCount();
 
     return (
-        <div className="min-h-screen">
-            {/* Header */}
-            <div className="border-b border-border/50 bg-card/50">
-                <div className="container-wide py-8 lg:py-12">
+        <div className="min-h-screen bg-background">
+
+            {/* ── Header ── */}
+            <div className="border-b border-border/50">
+                <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
                     <motion.div initial="hidden" animate="visible" variants={fadeUp}>
                         <Badge variant="secondary" className="mb-3 text-xs">Explore</Badge>
-                        <h1 className="text-2xl sm:text-3xl font-bold mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+                        <h1
+                            className="text-2xl sm:text-3xl font-bold mb-2"
+                            style={{ fontFamily: 'var(--font-display)' }}
+                        >
                             Thesis Opportunities
                         </h1>
-                        <p className="text-muted-foreground max-w-lg">
+                        <p className="text-sm text-muted-foreground max-w-xl">
                             Discover thesis projects from leading universities and industry partners across Scandinavia.
                         </p>
                     </motion.div>
                 </div>
             </div>
 
-            <div className="container-wide py-6 lg:py-8">
+            {/* ── Body ── */}
+            <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+
                 {/* Search + Mobile Filter Toggle */}
-                <div className="flex items-center gap-3 mb-6">
+                <div className="flex items-center gap-3 mb-5">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input
                             placeholder="Search by title, organization, or field..."
                             value={filters.search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="pl-10 h-11 bg-card"
+                            className="pl-10 h-11 bg-card w-full"
                         />
                     </div>
 
-                    {/* Mobile Filter */}
+                    <span className="hidden sm:inline text-xs text-muted-foreground whitespace-nowrap shrink-0">
+                        {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
+                    </span>
+
+                    {/* Mobile Filter Sheet */}
                     <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
                         <SheetTrigger asChild>
                             <Button variant="outline" className="lg:hidden gap-2 shrink-0 h-11">
@@ -96,9 +106,9 @@ export default function ThesisFeed() {
                     </Sheet>
                 </div>
 
-                {/* Active filters */}
+                {/* Active filter chips */}
                 {count > 0 && (
-                    <div className="flex flex-wrap items-center gap-2 mb-6">
+                    <div className="flex flex-wrap items-center gap-2 mb-5">
                         <span className="text-xs text-muted-foreground">Active filters:</span>
                         {Object.entries(filters).map(([key, val]) => {
                             if (key === 'search' || !Array.isArray(val)) return null;
@@ -120,42 +130,53 @@ export default function ThesisFeed() {
                     </div>
                 )}
 
-                {/* Layout */}
-                <div className="flex gap-8">
+                {/* Sidebar + Cards */}
+                <div className="flex gap-6 lg:gap-8 items-start">
+
                     {/* Desktop Sidebar */}
-                    <aside className="hidden lg:block w-64 shrink-0">
-                        <div className="sticky top-24">
+                    <aside className="hidden lg:block w-60 xl:w-64 shrink-0">
+                        <div className="sticky top-24 rounded-xl border border-border/50 bg-card p-4">
                             <FilterSidebar />
                         </div>
                     </aside>
 
-                    {/* Results */}
+                    {/* Results grid */}
                     <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-4">
-                            <p className="text-sm text-muted-foreground">
-                                {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
-                            </p>
-                        </div>
+                        {/* Mobile result count */}
+                        <p className="sm:hidden text-xs text-muted-foreground mb-4">
+                            {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
+                        </p>
 
                         {filtered.length > 0 ? (
                             <motion.div
                                 initial="hidden"
                                 animate="visible"
                                 variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
-                                className="grid grid-cols-1 md:grid-cols-2 gap-5"
+                                // `items-stretch` (the grid default) equalises row heights.
+                                // Each motion.div must also be a flex column so ThesisCard
+                                // can grow to fill the full cell height via `h-full`.
+                                className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                                style={{ alignItems: 'stretch' }}
                             >
                                 {filtered.map((thesis) => (
-                                    <motion.div key={thesis.id} variants={fadeUp}>
+                                    <motion.div
+                                        key={thesis.id}
+                                        variants={fadeUp}
+                                        className="h-full"
+                                    >
                                         <ThesisCard thesis={thesis} />
                                     </motion.div>
                                 ))}
                             </motion.div>
                         ) : (
-                            <div className="flex flex-col items-center justify-center py-20 text-center">
+                            <div className="flex flex-col items-center justify-center py-24 text-center">
                                 <div className="w-16 h-16 rounded-2xl bg-primary/5 text-primary flex items-center justify-center mb-4">
                                     <Search className="w-7 h-7" />
                                 </div>
-                                <h3 className="text-lg font-semibold mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+                                <h3
+                                    className="text-lg font-semibold mb-2"
+                                    style={{ fontFamily: 'var(--font-display)' }}
+                                >
                                     No thesis found in this field yet
                                 </h3>
                                 <p className="text-sm text-muted-foreground max-w-sm mb-6">

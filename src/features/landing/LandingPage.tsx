@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, cubicBezier } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import {
     Search,
@@ -88,7 +88,7 @@ function HeroSection() {
                         variants={fadeUp}
                         initial="hidden"
                         animate="visible"
-                        className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+                        className="text-lg sm:text-xl text-foreground/70 max-w-2xl mx-auto mb-10 leading-relaxed"
                     >
                         Connect with leading universities and companies across Scandinavia.
                         Discover thesis projects that launch careers, or share your research
@@ -102,7 +102,7 @@ function HeroSection() {
                         className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12"
                     >
                         <Link to="/thesis">
-                            <Button size="lg" className="gap-2 text-base px-8 shadow-lg shadow-primary/20">
+                            <Button size="lg" className="gap-2 text-base px-8 shadow-md shadow-primary/10">
                                 Browse Thesis
                                 <ArrowRight className="w-4 h-4" />
                             </Button>
@@ -194,40 +194,75 @@ function FeaturedThesisSection() {
     const featured = theses.filter((t) => t.featured);
 
     return (
-        <AnimatedSection className="section-padding">
-            <div className="container-wide">
-                <motion.div variants={fadeUp} className="flex items-end justify-between mb-8">
-                    <div>
-                        <Badge variant="secondary" className="mb-3 text-xs">
-                            Featured
-                        </Badge>
-                        <h2 className="text-2xl sm:text-3xl font-bold" style={{ fontFamily: 'var(--font-display)' }}>
+        <AnimatedSection className="relative py-8 sm:py-10 lg:py-14 overflow-hidden">
+            {/* Subtle background texture — mirrors FeaturedIdeasSection */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,hsl(var(--primary)/0.06),transparent)] pointer-events-none" />
+
+            <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+
+                {/* Section Header */}
+                <motion.div
+                    variants={fadeUp}
+                    className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12 lg:mb-16"
+                >
+                    <div className="max-w-xl">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Badge
+                                variant="secondary"
+                                className="text-xs font-medium tracking-wide uppercase px-3 py-1"
+                            >
+                                Featured
+                            </Badge>
+                        </div>
+                        <h2
+                            className="text-2xl sm:text-3xl lg:text-[1.75rem] font-bold leading-tight tracking-tight"
+                            style={{ fontFamily: 'var(--font-display)' }}
+                        >
                             Top Thesis Opportunities
                         </h2>
-                        <p className="text-muted-foreground mt-2 max-w-lg">
+                        <p className="text-muted-foreground mt-3 text-base sm:text-lg leading-relaxed">
                             Hand-picked thesis projects from leading organizations, updated weekly.
                         </p>
                     </div>
-                    <Link to="/thesis" className="hidden sm:flex">
-                        <Button variant="ghost" className="gap-1 text-sm">
-                            View All <ChevronRight className="w-4 h-4" />
+
+                    <Link to="/thesis" className="hidden sm:flex shrink-0">
+                        <Button
+                            variant="outline"
+                            className="gap-2 text-sm font-medium rounded-full px-5 h-10 border-border/60 hover:border-border transition-colors"
+                        >
+                            View All Theses
+                            <ChevronRight className="w-4 h-4" />
                         </Button>
                     </Link>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {featured.map((thesis) => (
-                        <motion.div key={thesis.id} variants={fadeUp}>
+                {/* Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+                    {featured.map((thesis, index) => (
+                        <motion.div
+                            key={thesis.id}
+                            variants={fadeUp}
+                            custom={index}
+                            className="h-full"
+                        >
                             <ThesisCard thesis={thesis} featured />
                         </motion.div>
                     ))}
                 </div>
 
-                <Link to="/thesis" className="sm:hidden flex justify-center mt-6">
-                    <Button variant="outline" className="gap-1">
-                        View All Thesis <ChevronRight className="w-4 h-4" />
-                    </Button>
-                </Link>
+                {/* Mobile CTA */}
+                <motion.div variants={fadeUp} className="sm:hidden flex justify-center mt-10">
+                    <Link to="/thesis">
+                        <Button
+                            variant="outline"
+                            className="gap-2 rounded-full px-6 h-11 border-border/60 font-medium"
+                        >
+                            View All Theses
+                            <ChevronRight className="w-4 h-4" />
+                        </Button>
+                    </Link>
+                </motion.div>
+
             </div>
         </AnimatedSection>
     );
@@ -240,40 +275,75 @@ function FeaturedIdeasSection() {
     const featured = thesisIdeas.filter((i) => i.featured);
 
     return (
-        <AnimatedSection className="section-padding bg-card/50 border-y border-border/30">
-            <div className="container-wide">
-                <motion.div variants={fadeUp} className="flex items-end justify-between mb-8">
-                    <div>
-                        <Badge variant="secondary" className="mb-3 text-xs">
-                            Innovation
-                        </Badge>
-                        <h2 className="text-2xl sm:text-3xl font-bold" style={{ fontFamily: 'var(--font-display)' }}>
+        <AnimatedSection className="relative py-8 sm:py-10 lg:py-14 bg-card/50 border-y border-border/30 overflow-hidden">
+            {/* Subtle background texture */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,hsl(var(--primary)/0.06),transparent)] pointer-events-none" />
+
+            <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+
+                {/* Section Header */}
+                <motion.div
+                    variants={fadeUp}
+                    className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12 lg:mb-16"
+                >
+                    <div className="max-w-xl">
+                        <div className="flex items-center gap-2 mb-4">
+                            <Badge
+                                variant="secondary"
+                                className="text-xs font-medium tracking-wide uppercase px-3 py-1"
+                            >
+                                Innovation
+                            </Badge>
+                        </div>
+                        <h2
+                            className="text-2xl sm:text-3xl lg:text-[1.75rem] font-bold leading-tight tracking-tight"
+                            style={{ fontFamily: 'var(--font-display)' }}
+                        >
                             Student Thesis Ideas
                         </h2>
-                        <p className="text-muted-foreground mt-2 max-w-lg">
+                        <p className="text-muted-foreground mt-3 text-base sm:text-lg leading-relaxed">
                             Innovative research proposals from talented students seeking funding and partnerships.
                         </p>
                     </div>
-                    <Link to="/ideas" className="hidden sm:flex">
-                        <Button variant="ghost" className="gap-1 text-sm">
-                            Explore Ideas <ChevronRight className="w-4 h-4" />
+
+                    <Link to="/ideas" className="hidden sm:flex shrink-0">
+                        <Button
+                            variant="outline"
+                            className="gap-2 text-sm font-medium rounded-full px-5 h-10 border-border/60 hover:border-border transition-colors"
+                        >
+                            Explore All Ideas
+                            <ChevronRight className="w-4 h-4" />
                         </Button>
                     </Link>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {featured.map((idea) => (
-                        <motion.div key={idea.id} variants={fadeUp}>
+                {/* Cards Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+                    {featured.map((idea, index) => (
+                        <motion.div
+                            key={idea.id}
+                            variants={fadeUp}
+                            custom={index}
+                            className="h-full"
+                        >
                             <IdeaCard idea={idea} featured />
                         </motion.div>
                     ))}
                 </div>
 
-                <Link to="/ideas" className="sm:hidden flex justify-center mt-6">
-                    <Button variant="outline" className="gap-1">
-                        Explore All Ideas <ChevronRight className="w-4 h-4" />
-                    </Button>
-                </Link>
+                {/* Mobile CTA */}
+                <motion.div variants={fadeUp} className="sm:hidden flex justify-center mt-10">
+                    <Link to="/ideas">
+                        <Button
+                            variant="outline"
+                            className="gap-2 rounded-full px-6 h-11 border-border/60 font-medium"
+                        >
+                            Explore All Ideas
+                            <ChevronRight className="w-4 h-4" />
+                        </Button>
+                    </Link>
+                </motion.div>
+
             </div>
         </AnimatedSection>
     );
@@ -305,7 +375,7 @@ function HowItWorksSection() {
     ];
 
     return (
-        <AnimatedSection className="section-padding">
+        <AnimatedSection className="section-padding py-8 sm:py-10 lg:py-14 border-b border-border/30">
             <div className="container-wide">
                 <motion.div variants={fadeUp} className="text-center mb-12 lg:mb-16">
                     <Badge variant="secondary" className="mb-3 text-xs">How It Works</Badge>
@@ -343,29 +413,212 @@ function HowItWorksSection() {
 // ══════════════════════════════════════════════════
 // 6. TRUSTED BY
 // ══════════════════════════════════════════════════
+const fadeUp0 = {
+    hidden: { opacity: 0, y: 16 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.55, ease: cubicBezier(0.22, 1, 0.36, 1) }
+    },
+};
+
 function TrustedBySection() {
+    const loopedLogos = [...trustedByLogos, ...trustedByLogos];
+
     return (
-        <AnimatedSection className="py-12 lg:py-16 border-y border-border/30">
-            <div className="container-wide">
-                <motion.p variants={fadeUp} className="text-center text-sm text-muted-foreground mb-8 font-medium uppercase tracking-wider">
+        <section className="trusted-root" style={{ borderTop: '1px solid hsl(var(--border) / 0.3)', borderBottom: '1px solid hsl(var(--border) / 0.3)' }}>
+            <div className="inner">
+                {/* label */}
+                <motion.p
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.6 }}
+                    variants={fadeUp0}
+                    className="label"
+                >
                     Trusted by leading institutions
                 </motion.p>
+
+                {/* marquee track */}
                 <motion.div
-                    variants={fadeUp}
-                    className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.4 }}
+                    variants={fadeUp0}
+                    className="marquee-wrapper"
                 >
-                    {trustedByLogos.map((logo) => (
-                        <span
-                            key={logo}
-                            className="text-lg font-semibold text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors duration-200"
-                            style={{ fontFamily: 'var(--font-display)' }}
-                        >
-                            {logo}
-                        </span>
-                    ))}
+                    <div className="fade fade-left" aria-hidden="true" />
+
+                    <div className="marquee-track">
+                        {/* Accessible fallback for screen readers */}
+                        <ul className="sr-only">
+                            {trustedByLogos.map((logo) => (
+                                <li key={logo}>{logo}</li>
+                            ))}
+                        </ul>
+
+                        {/* Visual marquee hidden from assistive tech */}
+                        <ul className="marquee-list" aria-hidden="true">
+                            {loopedLogos.map((logo, i) => (
+                                <li key={i} className="logo-item">
+                                    <span className="separator" />
+                                    <span className="logo-text">{logo}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="fade fade-right" aria-hidden="true" />
                 </motion.div>
             </div>
-        </AnimatedSection>
+
+            <style>{`
+                .trusted-root {
+                    padding: 0;
+                    position: relative;
+                }
+
+                .inner {
+                    padding: 2rem 0 2.25rem;
+                }
+
+                .label {
+                    text-align: center;
+                    font-size: 0.6875rem;
+                    letter-spacing: 0.18em;
+                    text-transform: uppercase;
+                    color: hsl(var(--muted-foreground) / 0.45);
+                    font-weight: 500;
+                    margin-bottom: 2.75rem;
+                    font-family: var(--font-display, inherit);
+                }
+
+                .marquee-wrapper {
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .marquee-track {
+                    width: 100%;
+                }
+
+                .marquee-list {
+                    display: flex;
+                    align-items: center;
+                    width: max-content;
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                    animation: marquee-scroll 28s linear infinite;
+                }
+
+                .marquee-list:hover {
+                    animation-play-state: paused;
+                }
+
+                @keyframes marquee-scroll {
+                    0%   { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+
+                .logo-item {
+                    display: flex;
+                    align-items: center;
+                    padding: 0;
+                    white-space: nowrap;
+                }
+
+                .separator {
+                    display: inline-block;
+                    width: 1px;
+                    height: 1rem;
+                    background: hsl(var(--border) / 0.3);
+                    margin: 0 2.5rem;
+                    flex-shrink: 0;
+                }
+
+                .logo-text {
+                    font-family: var(--font-display);
+                    font-size: 0.9375rem;
+                    font-weight: 600;
+                    letter-spacing: 0.02em;
+                    color: hsl(var(--muted-foreground) / 0.35);
+                    cursor: default;
+                    position: relative;
+                    overflow: hidden;
+                    transition: color 0.3s ease, text-shadow 0.3s ease;
+                }
+
+                .logo-text::after {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(
+                        105deg,
+                        transparent 20%,
+                        hsl(var(--foreground) / 0.12) 50%,
+                        transparent 80%
+                    );
+                    background-size: 200% 100%;
+                    background-position: -100% 0;
+                    transition: background-position 0.5s ease, opacity 0.3s ease;
+                    opacity: 0;
+                    pointer-events: none;
+                }
+
+                .logo-item:hover .logo-text {
+                    color: hsl(var(--muted-foreground) / 0.75);
+                    text-shadow: 0 0 20px hsl(var(--foreground) / 0.06);
+                }
+
+                .logo-item:hover .logo-text::after {
+                    opacity: 1;
+                    background-position: 200% 0;
+                }
+
+                .fade {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    width: 9rem;
+                    pointer-events: none;
+                    z-index: 2;
+                }
+
+                .fade-left {
+                    left: 0;
+                    background: linear-gradient(90deg, hsl(var(--background)) 0%, transparent 100%);
+                }
+
+                .fade-right {
+                    right: 0;
+                    background: linear-gradient(270deg, hsl(var(--background)) 0%, transparent 100%);
+                }
+
+                .sr-only {
+                    position: absolute;
+                    width: 1px;
+                    height: 1px;
+                    padding: 0;
+                    margin: -1px;
+                    overflow: hidden;
+                    clip: rect(0, 0, 0, 0);
+                    white-space: nowrap;
+                    border: 0;
+                    list-style: none;
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .marquee-list {
+                        animation: none;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                        width: 100%;
+                    }
+                    .fade { display: none; }
+                }
+            `}</style>
+        </section>
     );
 }
 
@@ -374,7 +627,7 @@ function TrustedBySection() {
 // ══════════════════════════════════════════════════
 function TestimonialsSection() {
     return (
-        <AnimatedSection className="section-padding">
+        <AnimatedSection className="section-padding py-8 sm:py-10 lg:py-14 border-t border-border/40">
             <div className="container-wide">
                 <motion.div variants={fadeUp} className="text-center mb-12">
                     <Badge variant="secondary" className="mb-3 text-xs">Testimonials</Badge>
@@ -416,7 +669,7 @@ function TestimonialsSection() {
 // ══════════════════════════════════════════════════
 function FinalCTASection() {
     return (
-        <AnimatedSection className="section-padding">
+        <AnimatedSection className="section-padding border-t border-border/40 py-12 sm:py-14 lg:py-18">
             <div className="container-narrow">
                 <motion.div
                     variants={fadeUp}
@@ -443,8 +696,7 @@ function FinalCTASection() {
                             <Link to="/signup">
                                 <Button
                                     size="lg"
-                                    variant="secondary"
-                                    className="gap-2 text-base px-8 bg-white text-primary hover:bg-white/90 shadow-lg"
+                                    className="cta-btn-fill gap-2 text-base px-8 font-semibold transition-all duration-200 hover:-translate-y-px"
                                 >
                                     Create Free Account
                                     <ArrowRight className="w-4 h-4" />
@@ -453,8 +705,8 @@ function FinalCTASection() {
                             <Link to="/thesis">
                                 <Button
                                     size="lg"
-                                    variant="ghost"
-                                    className="gap-2 text-base px-8 text-primary-foreground hover:bg-white/10"
+                                    variant="outline"
+                                    className="cta-btn-outline gap-2 text-base px-8 font-medium transition-all duration-200"
                                 >
                                     Browse Thesis
                                 </Button>
@@ -463,6 +715,50 @@ function FinalCTASection() {
                     </div>
                 </motion.div>
             </div>
+
+            <style>{`
+                /* Light mode: bg-primary is dark → buttons are light */
+                .cta-btn-fill {
+                    background: oklch(0.984 0.003 247.858) !important;
+                    color: oklch(0.208 0.042 265.755) !important;
+                    border: none !important;
+                    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+                }
+                .cta-btn-fill:hover {
+                    background: oklch(0.94 0.006 248) !important;
+                    box-shadow: 0 6px 24px rgba(0,0,0,0.22);
+                }
+
+                .cta-btn-outline {
+                    background: transparent !important;
+                    color: oklch(0.984 0.003 247.858) !important;
+                    border: 1px solid oklch(0.984 0.003 247.858 / 0.3) !important;
+                }
+                .cta-btn-outline:hover {
+                    background: oklch(0.984 0.003 247.858 / 0.1) !important;
+                    border-color: oklch(0.984 0.003 247.858 / 0.5) !important;
+                }
+
+                /* Dark mode: bg-primary is light → buttons are dark */
+                .dark .cta-btn-fill {
+                    background: oklch(0.208 0.042 265.755) !important;
+                    color: oklch(0.984 0.003 247.858) !important;
+                    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+                }
+                .dark .cta-btn-fill:hover {
+                    background: oklch(0.26 0.042 265) !important;
+                    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+                }
+
+                .dark .cta-btn-outline {
+                    color: oklch(0.208 0.042 265.755) !important;
+                    border-color: oklch(0.208 0.042 265.755 / 0.3) !important;
+                }
+                .dark .cta-btn-outline:hover {
+                    background: oklch(0.208 0.042 265.755 / 0.08) !important;
+                    border-color: oklch(0.208 0.042 265.755 / 0.5) !important;
+                }
+            `}</style>
         </AnimatedSection>
     );
 }

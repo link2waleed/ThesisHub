@@ -47,7 +47,7 @@ export default function ThesisDetail() {
     return (
         <div className="min-h-screen">
             {/* Breadcrumb */}
-            <div className="border-b border-border/50 bg-card/50">
+            <div className="border-b border-border/50">
                 <div className="container-wide py-4">
                     <nav className="flex items-center gap-2 text-sm text-muted-foreground">
                         <Link to="/thesis" className="hover:text-foreground transition-colors">
@@ -146,7 +146,7 @@ export default function ThesisDetail() {
                                 {/* Action Card */}
                                 <div className="card-elevated p-6">
                                     <a href={thesis.externalUrl} target="_blank" rel="noopener noreferrer" className="block">
-                                        <Button className="w-full gap-2 shadow-sm mb-3" size="lg">
+                                        <Button className="w-full gap-2 shadow-sm mb-3 rounded-xl" size="lg">
                                             Apply Now <ExternalLink className="w-4 h-4" />
                                         </Button>
                                     </a>
@@ -200,13 +200,13 @@ export default function ThesisDetail() {
 
                 {/* Related */}
                 {related.length > 0 && (
-                    <div className="border-t border-border/50 bg-card/30">
+                    <div className="border-t border-border/50">
                         <div className="container-wide section-padding">
                             <motion.div variants={fadeUp}>
                                 <h2 className="text-xl font-bold mb-6" style={{ fontFamily: 'var(--font-display)' }}>
                                     Related Thesis
                                 </h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     {related.map((t) => (
                                         <ThesisCard key={t.id} thesis={t} />
                                     ))}

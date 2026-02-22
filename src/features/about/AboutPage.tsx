@@ -42,7 +42,7 @@ export default function AboutPage() {
             </div>
 
             {/* Values */}
-            <div className="container-wide section-padding">
+            <div className="container-wide section-padding py-6 sm:py-8 lg:py-10 border-b border-border/50">
                 <div className="text-center mb-12">
                     <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ fontFamily: 'var(--font-display)' }}>
                         What We Stand For
@@ -64,7 +64,7 @@ export default function AboutPage() {
             </div>
 
             {/* CTA */}
-            <div className="container-narrow section-padding">
+            <div className="container-narrow section-padding py-6 sm:py-8 lg:py-10">
                 <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center">
                     <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'var(--font-display)' }}>
                         Join Our Community

@@ -30,9 +30,12 @@ export function IdeaCard({ idea, featured }: IdeaCardProps) {
         <motion.div
             whileHover={{ y: -2 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className={featured ? 'card-featured' : 'card-elevated'}
+            // h-full + flex flex-col so the card stretches to the grid cell height
+            className={`h-full flex flex-col ${featured ? 'card-featured' : 'card-elevated'} hover:shadow-lg transition-shadow duration-200`}
         >
-            <div className="p-5 sm:p-6">
+            {/* flex-1 so this inner div fills the card, flex-col to stack sections */}
+            <div className="flex flex-col flex-1 p-5 sm:p-6">
+
                 {/* Header: Icon + Funding Badge */}
                 <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/5 text-primary shrink-0">
@@ -50,8 +53,8 @@ export function IdeaCard({ idea, featured }: IdeaCardProps) {
                     </h3>
                 </Link>
 
-                {/* Abstract */}
-                <p className="text-sm text-muted-foreground line-clamp-3 mb-4 leading-relaxed">
+                {/* Abstract — flex-1 absorbs leftover space so footer pins to bottom */}
+                <p className="flex-1 text-sm text-muted-foreground line-clamp-3 mb-4 leading-relaxed">
                     {idea.shortAbstract}
                 </p>
 
@@ -71,8 +74,8 @@ export function IdeaCard({ idea, featured }: IdeaCardProps) {
                     ))}
                 </div>
 
-                {/* Author + Actions */}
-                <div className="flex items-center justify-between pt-2 border-t border-border/40">
+                {/* Author + Actions — mt-auto pins this to the bottom */}
+                <div className="flex items-center justify-between pt-2 border-t border-border/40 mt-auto">
                     <div className="flex items-center gap-2 min-w-0">
                         <div className="w-7 h-7 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
                             <GraduationCap className="w-3.5 h-3.5" />
