@@ -86,7 +86,7 @@ export default function ThesisFeed() {
                                 )}
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="left" className="w-80 overflow-y-auto">
+                        <SheetContent side="left" className="w-80 overflow-y-auto px-5">
                             <SheetHeader>
                                 <SheetTitle>Filters</SheetTitle>
                             </SheetHeader>
