@@ -70,6 +70,23 @@ export interface ThesisIdea {
     likes?: number;
 }
 
+export interface GraduateInternship {
+    id: string;
+    title: string;
+    company: string;
+    companyLogo: string;
+    location: string;
+    duration: string;
+    employmentType: 'Internship';
+    field: string;
+    tags: string[];
+    description: string;
+    requirements?: string[];
+    postedAt: string;
+    applyUrl: string;
+    featured?: boolean;
+}
+
 export interface FilterState {
     search: string;
     field: string[];

@@ -10,8 +10,13 @@ import { useEffect } from 'react';
 const LandingPage = lazy(() => import('@/features/landing/LandingPage'));
 const ThesisFeed = lazy(() => import('@/features/thesis/ThesisFeed'));
 const ThesisDetail = lazy(() => import('@/features/thesis/ThesisDetail'));
-const IdeasFeed = lazy(() => import('@/features/ideas/IdeasFeed'));
-const IdeaDetail = lazy(() => import('@/features/ideas/IdeaDetail'));
+// TEMPORARILY DISABLED: Thesis Ideas module (client request)
+// const IdeasFeed = lazy(() => import('@/features/ideas/IdeasFeed'));
+// const IdeaDetail = lazy(() => import('@/features/ideas/IdeaDetail'));
+
+// Graduate Internships module
+const InternshipFeed = lazy(() => import('@/features/internships/InternshipFeed'));
+const InternshipDetail = lazy(() => import('@/features/internships/InternshipDetail'));
 const AboutPage = lazy(() => import('@/features/about/AboutPage'));
 const NotFoundPage = lazy(() => import('@/features/notfound/NotFoundPage'));
 
@@ -83,7 +88,7 @@ function RootLayout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="flex-1 pt-16 lg:pt-[72px]">
+      <main className="flex-1">
         <Suspense fallback={<PageLoader />}>
           <Outlet />
         </Suspense>
@@ -107,8 +112,13 @@ export default function App() {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/thesis" element={<ThesisFeed />} />
                 <Route path="/thesis/:id" element={<ThesisDetail />} />
-                <Route path="/ideas" element={<IdeasFeed />} />
-                <Route path="/ideas/:id" element={<IdeaDetail />} />
+                {/* TEMPORARILY DISABLED: Thesis Ideas routes */}
+                {/* <Route path="/ideas" element={<IdeasFeed />} /> */}
+                {/* <Route path="/ideas/:id" element={<IdeaDetail />} /> */}
+
+                {/* Graduate Internships */}
+                <Route path="/internships" element={<InternshipFeed />} />
+                <Route path="/internships/:id" element={<InternshipDetail />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/organization/:id" element={<OrganizationProfile />} />
                 <Route path="/profile/:id" element={<PublicProfile />} />

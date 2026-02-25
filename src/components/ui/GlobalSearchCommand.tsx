@@ -10,13 +10,14 @@ import {
 } from '@/components/ui/command';
 import {
     GraduationCap,
-    Lightbulb,
+    Briefcase,
     Search,
     Building2,
     BookOpen,
     Home,
 } from 'lucide-react';
-import { theses, thesisIdeas } from '@/data/mockData';
+import { theses } from '@/data/mockData';
+import { internships } from '@/data/internships';
 
 interface GlobalSearchCommandProps {
     open: boolean;
@@ -33,7 +34,7 @@ export function GlobalSearchCommand({ open, onOpenChange }: GlobalSearchCommandP
 
     return (
         <CommandDialog open={open} onOpenChange={onOpenChange}>
-            <CommandInput placeholder="Search thesis, ideas, organizations..." />
+            <CommandInput placeholder="Search thesis, internships, organizations..." />
             <CommandList>
                 <CommandEmpty>
                     <div className="flex flex-col items-center gap-2 py-6">
@@ -54,9 +55,9 @@ export function GlobalSearchCommand({ open, onOpenChange }: GlobalSearchCommandP
                         <GraduationCap className="mr-2 h-4 w-4" />
                         Browse Thesis
                     </CommandItem>
-                    <CommandItem onSelect={() => runCommand(() => navigate('/ideas'))}>
-                        <Lightbulb className="mr-2 h-4 w-4" />
-                        Thesis Ideas
+                    <CommandItem onSelect={() => runCommand(() => navigate('/internships'))}>
+                        <Briefcase className="mr-2 h-4 w-4" />
+                        Graduate Internships
                     </CommandItem>
                     <CommandItem onSelect={() => runCommand(() => navigate('/about'))}>
                         <Building2 className="mr-2 h-4 w-4" />
@@ -85,17 +86,17 @@ export function GlobalSearchCommand({ open, onOpenChange }: GlobalSearchCommandP
 
                 <CommandSeparator />
 
-                <CommandGroup heading="Thesis Ideas">
-                    {thesisIdeas.slice(0, 3).map((idea) => (
+                <CommandGroup heading="Graduate Internships">
+                    {internships.slice(0, 3).map((internship) => (
                         <CommandItem
-                            key={idea.id}
-                            onSelect={() => runCommand(() => navigate(`/ideas/${idea.id}`))}
+                            key={internship.id}
+                            onSelect={() => runCommand(() => navigate(`/internships/${internship.id}`))}
                         >
-                            <Lightbulb className="mr-2 h-4 w-4 shrink-0" />
+                            <Briefcase className="mr-2 h-4 w-4 shrink-0" />
                             <div className="flex flex-col">
-                                <span className="text-sm">{idea.title}</span>
+                                <span className="text-sm">{internship.title}</span>
                                 <span className="text-xs text-muted-foreground">
-                                    {idea.author.name} · {idea.field}
+                                    {internship.company} · {internship.location}
                                 </span>
                             </div>
                         </CommandItem>

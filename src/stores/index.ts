@@ -10,7 +10,7 @@ interface FilterStore {
     activeFilterCount: () => number;
 }
 
-const defaultFilters: FilterState = {
+const createDefaultFilters = (): FilterState => ({
     search: '',
     field: [],
     location: [],
@@ -18,24 +18,24 @@ const defaultFilters: FilterState = {
     compensation: [],
     organizationType: [],
     workType: [],
-};
+});
 
 export const useFilterStore = create<FilterStore>((set, get) => ({
-    filters: { ...defaultFilters },
+    filters: createDefaultFilters(),
 
     setSearch: (search) =>
         set((state) => ({ filters: { ...state.filters, search } })),
 
     toggleFilter: (key, value) =>
         set((state) => {
-            const current = state.filters[key] as string[];
+            const current = [...(state.filters[key] as string[])];
             const next = current.includes(value)
                 ? current.filter((v) => v !== value)
                 : [...current, value];
             return { filters: { ...state.filters, [key]: next } };
         }),
 
-    clearFilters: () => set({ filters: { ...defaultFilters } }),
+    clearFilters: () => set({ filters: createDefaultFilters() }),
 
     clearFilter: (key) =>
         set((state) => ({ filters: { ...state.filters, [key]: [] } })),
@@ -51,15 +51,19 @@ export const useFilterStore = create<FilterStore>((set, get) => ({
 interface BookmarkStore {
     savedThesis: string[];
     savedIdeas: string[];
+    savedInternships: string[];
     toggleThesis: (id: string) => void;
     toggleIdea: (id: string) => void;
+    toggleInternship: (id: string) => void;
     isThesisSaved: (id: string) => boolean;
     isIdeaSaved: (id: string) => boolean;
+    isInternshipSaved: (id: string) => boolean;
 }
 
 export const useBookmarkStore = create<BookmarkStore>((set, get) => ({
     savedThesis: [],
     savedIdeas: [],
+    savedInternships: [],
 
     toggleThesis: (id) =>
         set((state) => ({
@@ -75,8 +79,16 @@ export const useBookmarkStore = create<BookmarkStore>((set, get) => ({
                 : [...state.savedIdeas, id],
         })),
 
+    toggleInternship: (id) =>
+        set((state) => ({
+            savedInternships: state.savedInternships.includes(id)
+                ? state.savedInternships.filter((t) => t !== id)
+                : [...state.savedInternships, id],
+        })),
+
     isThesisSaved: (id) => get().savedThesis.includes(id),
     isIdeaSaved: (id) => get().savedIdeas.includes(id),
+    isInternshipSaved: (id) => get().savedInternships.includes(id),
 }));
 
 // ── Theme Store ──

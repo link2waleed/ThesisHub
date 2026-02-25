@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom';
 import { GraduationCap, Twitter, Linkedin, Github, Mail } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { Container } from './Container';
 
 const footerSections = [
     {
         title: 'Platform',
         links: [
             { label: 'Browse Thesis', href: '/thesis' },
-            { label: 'Thesis Ideas', href: '/ideas' },
+            { label: 'Graduate Internships', href: '/internships' },
             { label: 'For Universities', href: '/about' },
             { label: 'For Companies', href: '/about' },
             { label: 'Pricing', href: '/pricing' },
@@ -35,8 +36,7 @@ const footerSections = [
 export function Footer() {
     return (
         <footer className="bg-card border-t border-border/50">
-            {/* Top padding buffer */}
-            <div className="container-wide px-6 md:px-10 lg:px-16 pt-16 pb-10 md:pt-20 md:pb-12">
+            <Container className="pt-16 pb-10 md:pt-20 md:pb-12">
 
                 {/* Main Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 lg:gap-16 mb-14 md:mb-16">
@@ -111,7 +111,7 @@ export function Footer() {
                     </p>
                 </div>
 
-            </div>
+            </Container>
         </footer>
     );
 }

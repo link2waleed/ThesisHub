@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Container } from '@/components/layout/Container';
 
 const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -27,7 +28,7 @@ export default function AboutPage() {
         <div className="min-h-screen">
             {/* Hero */}
             <div className="border-b border-border/50 bg-card/50">
-                <div className="container-wide py-16 lg:py-24 text-center">
+                <Container className="py-16 lg:py-24 text-center">
                     <motion.div initial="hidden" animate="visible" variants={fadeUp}>
                         <Badge variant="secondary" className="mb-4 text-xs">About ThesisHub</Badge>
                         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-4" style={{ fontFamily: 'var(--font-display)' }}>
@@ -38,54 +39,58 @@ export default function AboutPage() {
                             at leading universities and companies across Scandinavia and Europe.
                         </p>
                     </motion.div>
-                </div>
+                </Container>
             </div>
 
             {/* Values */}
-            <div className="container-wide section-padding py-6 sm:py-8 lg:py-10 border-b border-border/50">
-                <div className="text-center mb-12">
-                    <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ fontFamily: 'var(--font-display)' }}>
-                        What We Stand For
-                    </h2>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                    {values.map((v) => (
-                        <motion.div key={v.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="card-elevated p-6 flex gap-4">
-                            <div className="w-12 h-12 rounded-xl bg-primary/5 text-primary flex items-center justify-center shrink-0">
-                                <v.icon className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <h4 className="font-semibold mb-1">{v.title}</h4>
-                                <p className="text-sm text-muted-foreground leading-relaxed">{v.description}</p>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
-            </div>
+            <section className="py-16 md:py-20 lg:py-24 border-b border-border/50">
+                <Container>
+                    <div className="text-center mb-12">
+                        <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+                            What We Stand For
+                        </h2>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                        {values.map((v) => (
+                            <motion.div key={v.title} initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="card-elevated p-6 flex gap-4">
+                                <div className="w-12 h-12 rounded-xl bg-primary/5 text-primary flex items-center justify-center shrink-0">
+                                    <v.icon className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <h4 className="font-semibold mb-1">{v.title}</h4>
+                                    <p className="text-sm text-muted-foreground leading-relaxed">{v.description}</p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </Container>
+            </section>
 
             {/* CTA */}
-            <div className="container-narrow section-padding py-6 sm:py-8 lg:py-10">
-                <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center">
-                    <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'var(--font-display)' }}>
-                        Join Our Community
-                    </h2>
-                    <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-                        Whether you're a student, university, or company — there's a place for you on ThesisHub.
-                    </p>
-                    <div className="flex justify-center gap-3">
-                        <Link to="/signup">
-                            <Button size="lg" className="gap-2">
-                                Get Started <ArrowRight className="w-4 h-4" />
-                            </Button>
-                        </Link>
-                        <Link to="/thesis">
-                            <Button variant="outline" size="lg">
-                                Browse Thesis
-                            </Button>
-                        </Link>
-                    </div>
-                </motion.div>
-            </div>
+            <section className="py-16 md:py-20 lg:py-24">
+                <Container size="5xl">
+                    <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} className="text-center">
+                        <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: 'var(--font-display)' }}>
+                            Join Our Community
+                        </h2>
+                        <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                            Whether you're a student, university, or company — there's a place for you on ThesisHub.
+                        </p>
+                        <div className="flex justify-center gap-4">
+                            <Link to="/signup">
+                                <Button size="lg" className="gap-2">
+                                    Get Started <ArrowRight className="w-4 h-4" />
+                                </Button>
+                            </Link>
+                            <Link to="/thesis">
+                                <Button variant="outline" size="lg">
+                                    Browse Thesis
+                                </Button>
+                            </Link>
+                        </div>
+                    </motion.div>
+                </Container>
+            </section>
         </div>
     );
 }

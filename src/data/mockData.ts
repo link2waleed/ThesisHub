@@ -322,7 +322,7 @@ export const testimonials: Testimonial[] = [
         name: 'Maria Chen',
         role: 'Innovation Manager',
         organization: 'Volvo Group',
-        quote: 'The thesis ideas section is a goldmine. We\'ve found several student proposals that align perfectly with our R&D roadmap. It\'s like having a direct pipeline to academic innovation.',
+        quote: 'The internship listings are a goldmine. We\'ve found several talented candidates that align perfectly with our R&D roadmap. It\'s like having a direct pipeline to academic talent.',
     },
 ];
 

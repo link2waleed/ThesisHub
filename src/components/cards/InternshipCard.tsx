@@ -6,20 +6,12 @@ import {
     ArrowUpRight,
     Building2,
 } from 'lucide-react';
-import type { Thesis } from '@/types';
+import type { GraduateInternship } from '@/types';
 import { useBookmarkStore } from '@/stores';
 
-interface ThesisCardProps {
-    thesis: Thesis;
+interface InternshipCardProps {
+    internship: GraduateInternship;
     featured?: boolean;
-}
-
-function getCompensationStyle(comp: string) {
-    switch (comp) {
-        case 'paid': return 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400';
-        case 'stipend': return 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400';
-        default: return 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400';
-    }
 }
 
 function timeAgo(dateStr: string): string {
@@ -33,12 +25,12 @@ function timeAgo(dateStr: string): string {
     return `${Math.floor(diff / 30)} months ago`;
 }
 
-export function ThesisCard({ thesis }: ThesisCardProps) {
-    const { toggleThesis, isThesisSaved } = useBookmarkStore();
-    const saved = isThesisSaved(thesis.id);
+export function InternshipCard({ internship }: InternshipCardProps) {
+    const { toggleInternship, isInternshipSaved } = useBookmarkStore();
+    const saved = isInternshipSaved(internship.id);
 
     return (
-        <Link to={`/thesis/${thesis.id}`} className="block h-full">
+        <Link to={`/internships/${internship.id}`} className="block h-full">
             <div
                 className="
                     group relative h-full flex flex-col
@@ -59,10 +51,10 @@ export function ThesisCard({ thesis }: ThesisCardProps) {
                     <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3 min-w-0">
                             <div className="h-10 w-10 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center overflow-hidden shrink-0">
-                                {thesis.organization.logo ? (
+                                {internship.companyLogo ? (
                                     <img
-                                        src={thesis.organization.logo}
-                                        alt={thesis.organization.name}
+                                        src={internship.companyLogo}
+                                        alt={internship.company}
                                         className="w-7 h-7 object-contain"
                                         loading="lazy"
                                     />
@@ -72,10 +64,10 @@ export function ThesisCard({ thesis }: ThesisCardProps) {
                             </div>
                             <div className="min-w-0">
                                 <p className="text-sm font-medium text-slate-700 dark:text-slate-300 truncate">
-                                    {thesis.organization.name}
+                                    {internship.company}
                                 </p>
                                 <p className="text-xs text-slate-400 dark:text-slate-500">
-                                    {timeAgo(thesis.postedAt)}
+                                    {timeAgo(internship.postedAt)}
                                 </p>
                             </div>
                         </div>
@@ -83,7 +75,7 @@ export function ThesisCard({ thesis }: ThesisCardProps) {
                         <button
                             onClick={(e) => {
                                 e.preventDefault();
-                                toggleThesis(thesis.id);
+                                toggleInternship(internship.id);
                             }}
                             className={`shrink-0 p-1.5 rounded-md transition-colors duration-150 ${saved
                                 ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50'
@@ -97,38 +89,35 @@ export function ThesisCard({ thesis }: ThesisCardProps) {
 
                     {/* 2. Title — dominant visual element */}
                     <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 leading-snug line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200">
-                        {thesis.title}
+                        {internship.title}
                     </h3>
 
                     {/* 3. Description — flex-1 pushes bottom content down */}
                     <p className="flex-1 text-sm text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
-                        {thesis.shortDescription}
+                        {internship.description.split('\n')[0]}
                     </p>
 
                     {/* 4. Metadata */}
                     <div className="flex flex-wrap items-center gap-3 text-[13px] text-slate-500 dark:text-slate-400">
                         <span className="inline-flex items-center gap-1">
                             <MapPin className="w-3.5 h-3.5" />
-                            {thesis.location}
+                            {internship.location}
                         </span>
                         <span className="inline-flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5" />
-                            {thesis.duration}
+                            {internship.duration}
                         </span>
                         <span className="inline-flex items-center gap-1 capitalize">
-                            {thesis.type}
+                            {internship.employmentType}
                         </span>
                     </div>
 
                     {/* 5. Tags */}
                     <div className="flex flex-wrap gap-1.5 pt-0.5">
                         <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                            {thesis.field}
+                            {internship.field}
                         </span>
-                        <span className={`text-xs font-medium px-2.5 py-1 rounded-md capitalize ${getCompensationStyle(thesis.compensation)}`}>
-                            {thesis.compensation}
-                        </span>
-                        {thesis.tags.slice(0, 2).map((tag) => (
+                        {internship.tags.slice(0, 2).map((tag) => (
                             <span
                                 key={tag}
                                 className="text-xs font-medium px-2.5 py-1 rounded-md bg-slate-50 text-slate-500 dark:bg-slate-800/60 dark:text-slate-400"
@@ -147,7 +136,7 @@ export function ThesisCard({ thesis }: ThesisCardProps) {
                         View details <ArrowUpRight className="w-3.5 h-3.5" />
                     </span>
                     <a
-                        href={thesis.externalUrl}
+                        href={internship.applyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}

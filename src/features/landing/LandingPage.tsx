@@ -10,21 +10,21 @@ import {
     Users,
     Briefcase,
     ChevronRight,
-    Lightbulb,
     CheckCircle2,
     Quote,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ThesisCard } from '@/components/cards/ThesisCard';
-import { IdeaCard } from '@/components/cards/IdeaCard';
+import { InternshipCard } from '@/components/cards/InternshipCard';
+import { Container } from '@/components/layout/Container';
 import {
     theses,
-    thesisIdeas,
     testimonials,
     platformStats,
     trustedByLogos,
 } from '@/data/mockData';
+import { internships } from '@/data/internships';
 
 // ── Animation Variants ──
 const fadeUp: Variants = {
@@ -57,49 +57,54 @@ function AnimatedSection({ children, className = '' }: { children: React.ReactNo
 // ══════════════════════════════════════════════════
 function HeroSection() {
     return (
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden min-h-[82vh] lg:min-h-[85vh] flex items-center">
             {/* Subtle background pattern */}
             <div className="absolute inset-0 -z-10">
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent" />
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-primary/[0.04] rounded-full blur-3xl" />
             </div>
 
-            <div className="container-wide pt-16 pb-20 lg:pt-24 lg:pb-28">
-                <div className="max-w-3xl mx-auto text-center">
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 lg:pt-12 lg:pb-20">
+                <div className="max-w-3xl mx-auto text-center space-y-8">
+
+                    {/* Badge */}
                     <motion.div variants={fadeUp} initial="hidden" animate="visible">
-                        <Badge variant="outline" className="mb-6 px-4 py-1.5 text-sm font-medium">
-                            <Lightbulb className="w-3.5 h-3.5 mr-1.5" />
-                            Where Academic Ideas Meet Industry Impact
+                        <Badge variant="outline" className="px-4 py-1.5 text-sm font-medium">
+                            <GraduationCap className="w-3.5 h-3.5 mr-1.5" />
+                            Where Academic Excellence Meets Industry Impact
                         </Badge>
                     </motion.div>
 
+                    {/* Headline */}
                     <motion.h1
                         variants={fadeUp}
                         initial="hidden"
                         animate="visible"
-                        className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground mb-6 text-balance leading-[1.1]"
+                        className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground text-balance leading-[1.08]"
                         style={{ fontFamily: 'var(--font-display)' }}
                     >
                         Find Your Perfect{' '}
                         <span className="text-primary">Thesis Opportunity</span>
                     </motion.h1>
 
+                    {/* Subtitle */}
                     <motion.p
                         variants={fadeUp}
                         initial="hidden"
                         animate="visible"
-                        className="text-lg sm:text-xl text-foreground/70 max-w-2xl mx-auto mb-10 leading-relaxed"
+                        className="text-lg sm:text-xl text-foreground/65 max-w-2xl mx-auto leading-relaxed"
                     >
                         Connect with leading universities and companies across Scandinavia.
-                        Discover thesis projects that launch careers, or share your research
-                        ideas with organizations ready to invest.
+                        Discover thesis projects that launch careers, or explore graduate
+                        internship opportunities at top organizations.
                     </motion.p>
 
+                    {/* Action Buttons */}
                     <motion.div
                         variants={fadeUp}
                         initial="hidden"
                         animate="visible"
-                        className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12"
+                        className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
                     >
                         <Link to="/thesis">
                             <Button size="lg" className="gap-2 text-base px-8 shadow-md shadow-primary/10">
@@ -107,10 +112,10 @@ function HeroSection() {
                                 <ArrowRight className="w-4 h-4" />
                             </Button>
                         </Link>
-                        <Link to="/ideas">
+                        <Link to="/internships">
                             <Button variant="outline" size="lg" className="gap-2 text-base px-8">
-                                <Lightbulb className="w-4 h-4" />
-                                Post Your Idea
+                                <Briefcase className="w-4 h-4" />
+                                Explore Internships
                             </Button>
                         </Link>
                     </motion.div>
@@ -120,7 +125,7 @@ function HeroSection() {
                         variants={fadeUp}
                         initial="hidden"
                         animate="visible"
-                        className="max-w-xl mx-auto"
+                        className="max-w-xl mx-auto pt-4"
                     >
                         <div className="flex items-center gap-2 p-2 rounded-xl border border-border/50 bg-card shadow-sm">
                             <div className="flex items-center gap-2 flex-1 pl-3">
@@ -141,10 +146,11 @@ function HeroSection() {
                                 Search
                             </Button>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-2">
+                        <p className="text-xs text-muted-foreground/60 mt-3 tracking-wide">
                             Popular: Machine Learning, Sustainability, 5G, Fintech, Biotech
                         </p>
                     </motion.div>
+
                 </div>
             </div>
         </section>
@@ -164,7 +170,7 @@ function StatsSection() {
 
     return (
         <AnimatedSection className="border-y border-border/50 bg-card/50">
-            <div className="container-wide py-12 lg:py-16">
+            <Container className="py-16 lg:py-20">
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                     {stats.map((stat) => (
                         <motion.div
@@ -182,7 +188,7 @@ function StatsSection() {
                         </motion.div>
                     ))}
                 </div>
-            </div>
+            </Container>
         </AnimatedSection>
     );
 }
@@ -198,7 +204,7 @@ function FeaturedThesisSection() {
             {/* Subtle background texture — mirrors FeaturedIdeasSection */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,hsl(var(--primary)/0.06),transparent)] pointer-events-none" />
 
-            <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+            <Container>
 
                 {/* Section Header */}
                 <motion.div
@@ -263,23 +269,23 @@ function FeaturedThesisSection() {
                     </Link>
                 </motion.div>
 
-            </div>
+            </Container>
         </AnimatedSection>
     );
 }
 
 // ══════════════════════════════════════════════════
-// 4. FEATURED IDEAS
+// 4. FEATURED GRADUATE INTERNSHIPS
 // ══════════════════════════════════════════════════
-function FeaturedIdeasSection() {
-    const featured = thesisIdeas.filter((i) => i.featured);
+function FeaturedInternshipsSection() {
+    const featured = internships.filter((i) => i.featured);
 
     return (
         <AnimatedSection className="relative py-8 sm:py-10 lg:py-14 bg-card/50 border-y border-border/30 overflow-hidden">
             {/* Subtle background texture */}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,hsl(var(--primary)/0.06),transparent)] pointer-events-none" />
 
-            <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+            <Container>
 
                 {/* Section Header */}
                 <motion.div
@@ -292,26 +298,26 @@ function FeaturedIdeasSection() {
                                 variant="secondary"
                                 className="text-xs font-medium tracking-wide uppercase px-3 py-1"
                             >
-                                Innovation
+                                Careers
                             </Badge>
                         </div>
                         <h2
                             className="text-2xl sm:text-3xl lg:text-[1.75rem] font-bold leading-tight tracking-tight"
                             style={{ fontFamily: 'var(--font-display)' }}
                         >
-                            Student Thesis Ideas
+                            Featured Graduate Internships
                         </h2>
                         <p className="text-muted-foreground mt-3 text-base sm:text-lg leading-relaxed">
-                            Innovative research proposals from talented students seeking funding and partnerships.
+                            Kickstart your career with internships at leading companies across Scandinavia.
                         </p>
                     </div>
 
-                    <Link to="/ideas" className="hidden sm:flex shrink-0">
+                    <Link to="/internships" className="hidden sm:flex shrink-0">
                         <Button
                             variant="outline"
                             className="gap-2 text-sm font-medium rounded-full px-5 h-10 border-border/60 hover:border-border transition-colors"
                         >
-                            Explore All Ideas
+                            Explore All Internships
                             <ChevronRight className="w-4 h-4" />
                         </Button>
                     </Link>
@@ -319,32 +325,32 @@ function FeaturedIdeasSection() {
 
                 {/* Cards Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
-                    {featured.map((idea, index) => (
+                    {featured.map((internship, index) => (
                         <motion.div
-                            key={idea.id}
+                            key={internship.id}
                             variants={fadeUp}
                             custom={index}
                             className="h-full"
                         >
-                            <IdeaCard idea={idea} featured />
+                            <InternshipCard internship={internship} featured />
                         </motion.div>
                     ))}
                 </div>
 
                 {/* Mobile CTA */}
                 <motion.div variants={fadeUp} className="sm:hidden flex justify-center mt-10">
-                    <Link to="/ideas">
+                    <Link to="/internships">
                         <Button
                             variant="outline"
                             className="gap-2 rounded-full px-6 h-11 border-border/60 font-medium"
                         >
-                            Explore All Ideas
+                            Explore All Internships
                             <ChevronRight className="w-4 h-4" />
                         </Button>
                     </Link>
                 </motion.div>
 
-            </div>
+            </Container>
         </AnimatedSection>
     );
 }
@@ -357,13 +363,13 @@ function HowItWorksSection() {
         {
             number: '01',
             title: 'Discover',
-            description: 'Browse thesis opportunities from top universities and companies, or explore innovative student ideas.',
+            description: 'Browse thesis opportunities from top universities and companies, or explore graduate internships.',
             icon: Search,
         },
         {
             number: '02',
             title: 'Connect',
-            description: 'Apply directly to thesis projects or connect with students whose ideas align with your research goals.',
+            description: 'Apply directly to thesis projects or internship programs that align with your career goals.',
             icon: Users,
         },
         {
@@ -375,8 +381,8 @@ function HowItWorksSection() {
     ];
 
     return (
-        <AnimatedSection className="section-padding py-8 sm:py-10 lg:py-14 border-b border-border/30">
-            <div className="container-wide">
+        <AnimatedSection className="py-16 md:py-20 lg:py-24 border-b border-border/30">
+            <Container>
                 <motion.div variants={fadeUp} className="text-center mb-12 lg:mb-16">
                     <Badge variant="secondary" className="mb-3 text-xs">How It Works</Badge>
                     <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ fontFamily: 'var(--font-display)' }}>
@@ -405,7 +411,7 @@ function HowItWorksSection() {
                         </motion.div>
                     ))}
                 </div>
-            </div>
+            </Container>
         </AnimatedSection>
     );
 }
@@ -627,8 +633,8 @@ function TrustedBySection() {
 // ══════════════════════════════════════════════════
 function TestimonialsSection() {
     return (
-        <AnimatedSection className="section-padding py-8 sm:py-10 lg:py-14 border-t border-border/40">
-            <div className="container-wide">
+        <AnimatedSection className="py-16 md:py-20 lg:py-24 border-t border-border/40">
+            <Container>
                 <motion.div variants={fadeUp} className="text-center mb-12">
                     <Badge variant="secondary" className="mb-3 text-xs">Testimonials</Badge>
                     <h2 className="text-2xl sm:text-3xl font-bold" style={{ fontFamily: 'var(--font-display)' }}>
@@ -659,7 +665,7 @@ function TestimonialsSection() {
                         </motion.div>
                     ))}
                 </div>
-            </div>
+            </Container>
         </AnimatedSection>
     );
 }
@@ -669,8 +675,8 @@ function TestimonialsSection() {
 // ══════════════════════════════════════════════════
 function FinalCTASection() {
     return (
-        <AnimatedSection className="section-padding border-t border-border/40 py-12 sm:py-14 lg:py-18">
-            <div className="container-narrow">
+        <AnimatedSection className="py-16 md:py-20 lg:py-24 border-t border-border/40">
+            <Container size="5xl">
                 <motion.div
                     variants={fadeUp}
                     className="relative rounded-2xl bg-primary px-8 py-16 sm:px-12 sm:py-20 text-center overflow-hidden"
@@ -714,7 +720,7 @@ function FinalCTASection() {
                         </div>
                     </div>
                 </motion.div>
-            </div>
+            </Container>
 
             <style>{`
                 /* Light mode: bg-primary is dark → buttons are light */
@@ -772,7 +778,7 @@ export default function LandingPage() {
             <HeroSection />
             <StatsSection />
             <FeaturedThesisSection />
-            <FeaturedIdeasSection />
+            <FeaturedInternshipsSection />
             <HowItWorksSection />
             <TrustedBySection />
             <TestimonialsSection />

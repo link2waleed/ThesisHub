@@ -5,7 +5,6 @@ import {
     Briefcase,
     GraduationCap,
     ArrowRight,
-    Lightbulb,
     Target,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 const studentStats = [
     { label: 'Saved Theses', value: 12, change: '+3 this week', icon: BookOpen, color: 'text-indigo-600 bg-indigo-50' },
     { label: 'Applications', value: 4, change: '2 pending', icon: Briefcase, color: 'text-emerald-600 bg-emerald-50' },
-    { label: 'Ideas Published', value: 3, change: '45 likes', icon: Lightbulb, color: 'text-amber-600 bg-amber-50' },
+    { label: 'Internship Apps', value: 2, change: '1 in review', icon: Briefcase, color: 'text-amber-600 bg-amber-50' },
     { label: 'Profile Score', value: '78%', change: '+5% this month', icon: Target, color: 'text-violet-600 bg-violet-50' },
 ];
 
@@ -27,7 +26,7 @@ const applicationTimeline = [
 const suggestedActions = [
     { icon: GraduationCap, title: 'Complete your profile', desc: 'Add research interests to get better matches', action: '/dashboard/profile', progress: 78 },
     { icon: BookOpen, title: 'Explore new theses', desc: '12 new opportunities match your profile', action: '/thesis', progress: null },
-    { icon: Lightbulb, title: 'Share a thesis idea', desc: 'Get feedback from the community', action: '/ideas', progress: null },
+    { icon: Briefcase, title: 'Browse internships', desc: 'Explore graduate internship opportunities', action: '/internships', progress: null },
 ];
 
 export default function StudentDashboard() {
