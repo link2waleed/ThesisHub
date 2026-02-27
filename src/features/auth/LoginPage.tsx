@@ -1,16 +1,30 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useAuthStore } from '@/stores';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+
+    const { login, isLoading, isAuthenticated, user } = useAuthStore();
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    // If already authenticated, redirect immediately
+    if (isAuthenticated && user) {
+        const redirect = searchParams.get('redirect');
+        if (redirect) {
+            navigate(redirect, { replace: true });
+        } else {
+            navigate(getRoleRedirect(user.role), { replace: true });
+        }
+    }
 
     const validate = () => {
         const errs: typeof errors = {};
@@ -25,10 +39,19 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!validate()) return;
-        setIsLoading(true);
-        // Mock login delay
-        await new Promise((r) => setTimeout(r, 1500));
-        setIsLoading(false);
+
+        await login(email, password);
+
+        // Read fresh state after login
+        const state = useAuthStore.getState();
+        if (state.isAuthenticated && state.user) {
+            const redirect = searchParams.get('redirect');
+            if (redirect) {
+                navigate(redirect, { replace: true });
+            } else {
+                navigate(getRoleRedirect(state.user.role), { replace: true });
+            }
+        }
     };
 
     return (
@@ -139,6 +162,20 @@ export default function LoginPage() {
                     Create one
                 </Link>
             </p>
+
+            {/* Admin notice */}
+            <p className="text-xs text-gray-400 text-center mt-4">
+                Admin access is restricted to authorized personnel.
+            </p>
         </div>
     );
+}
+
+function getRoleRedirect(role: string): string {
+    switch (role) {
+        case 'admin': return '/admin';
+        case 'company': return '/dashboard/company';
+        case 'university': return '/dashboard/university';
+        default: return '/dashboard/student';
+    }
 }

@@ -4,6 +4,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Navbar, Footer, AuthLayout } from '@/components/layout';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
+import { AdminRoute } from '@/components/AdminRoute';
+import { useAuthStore } from '@/stores';
 import { useEffect } from 'react';
 
 // ── Lazy-loaded pages ──
@@ -51,6 +54,17 @@ const PrivacyPage = lazy(() => import('@/features/utility/PrivacyPage'));
 // Blog pages
 const BlogListing = lazy(() => import('@/features/blog/BlogListing'));
 const BlogDetail = lazy(() => import('@/features/blog/BlogDetail'));
+
+// Admin pages
+const AdminLayout = lazy(() => import('@/features/admin/AdminLayout'));
+const AdminDashboard = lazy(() => import('@/features/admin/pages/AdminDashboard'));
+const AdminThesis = lazy(() => import('@/features/admin/pages/AdminThesis'));
+const AdminInternships = lazy(() => import('@/features/admin/pages/AdminInternships'));
+const AdminUsers = lazy(() => import('@/features/admin/pages/AdminUsers'));
+const AdminApprovals = lazy(() => import('@/features/admin/pages/AdminApprovals'));
+const AdminAnalytics = lazy(() => import('@/features/admin/pages/AdminAnalytics'));
+const AdminReports = lazy(() => import('@/features/admin/pages/AdminReports'));
+const AdminSettings = lazy(() => import('@/features/admin/pages/AdminSettings'));
 
 // ── Query Client ──
 const queryClient = new QueryClient({
@@ -100,6 +114,9 @@ function RootLayout() {
 
 // ── App ──
 export default function App() {
+  const restoreSession = useAuthStore((s) => s.restoreSession);
+  useEffect(() => { restoreSession(); }, [restoreSession]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -133,9 +150,13 @@ export default function App() {
                 <Route path="*" element={<NotFoundPage />} />
               </Route>
 
-              {/* Dashboard routes (nested layout inside RootLayout) */}
+              {/* Dashboard routes (protected — must be logged in) */}
               <Route element={<RootLayout />}>
-                <Route path="/dashboard" element={<DashboardLayout />}>
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <DashboardLayout />
+                  </ProtectedRoute>
+                }>
                   <Route index element={<DashboardOverview />} />
                   <Route path="profile" element={<ProfilePage />} />
                   <Route path="settings" element={<SettingsPage />} />
@@ -144,6 +165,22 @@ export default function App() {
                   <Route path="university" element={<UniversityDashboard />} />
                   <Route path="company" element={<CompanyDashboard />} />
                 </Route>
+              </Route>
+
+              {/* Admin routes (protected — admin role only) */}
+              <Route path="/admin" element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }>
+                <Route index element={<AdminDashboard />} />
+                <Route path="thesis" element={<AdminThesis />} />
+                <Route path="internships" element={<AdminInternships />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="approvals" element={<AdminApprovals />} />
+                <Route path="analytics" element={<AdminAnalytics />} />
+                <Route path="reports" element={<AdminReports />} />
+                <Route path="settings" element={<AdminSettings />} />
               </Route>
 
               {/* Auth routes (separate layout) */}

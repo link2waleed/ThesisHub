@@ -108,39 +108,111 @@ export const useThemeStore = create<ThemeStore>((set) => ({
 }));
 
 // ── Auth Store ──
+type UserRole = 'admin' | 'student' | 'company' | 'university';
+
+interface AuthUser {
+    id: string;
+    name: string;
+    email: string;
+    role: UserRole;
+}
+
 interface AuthStore {
-    user: { id: string; name: string; email: string; role: string } | null;
+    user: AuthUser | null;
+    token: string | null;
     isAuthenticated: boolean;
     isLoading: boolean;
     login: (email: string, password: string) => Promise<void>;
     signup: (name: string, email: string, password: string, role: string) => Promise<void>;
     logout: () => void;
+    restoreSession: () => void;
+}
+
+// Mock credentials map
+const MOCK_ACCOUNTS: Record<string, { password: string; name: string; role: UserRole }> = {
+    'admin@thesishub.com': { password: 'admin123', name: 'Waleed Ahmad', role: 'admin' },
+    'hr@ericsson.com': { password: 'pass123', name: 'Ericsson AB', role: 'company' },
+    'dean@kth.se': { password: 'pass123', name: 'KTH Royal Institute', role: 'university' },
+    'emma@student.se': { password: 'pass123', name: 'Emma Lindström', role: 'student' },
+};
+
+function detectRole(email: string): UserRole {
+    const e = email.toLowerCase();
+    if (e.includes('admin')) return 'admin';
+    if (e.includes('company') || e.includes('corp') || e.includes('hr@')) return 'company';
+    if (e.includes('uni') || e.includes('university') || e.includes('dean') || e.includes('.edu')) return 'university';
+    return 'student';
+}
+
+function persistAuth(user: AuthUser, token: string) {
+    localStorage.setItem('thesishub_auth', JSON.stringify({ user, token }));
+}
+
+function clearPersistedAuth() {
+    localStorage.removeItem('thesishub_auth');
+}
+
+function getPersistedAuth(): { user: AuthUser; token: string } | null {
+    try {
+        const raw = localStorage.getItem('thesishub_auth');
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (parsed?.user && parsed?.token) return parsed;
+        return null;
+    } catch {
+        return null;
+    }
 }
 
 export const useAuthStore = create<AuthStore>((set) => ({
     user: null,
+    token: null,
     isAuthenticated: false,
     isLoading: false,
 
-    login: async (_email, _password) => {
+    login: async (email, password) => {
         set({ isLoading: true });
-        await new Promise((r) => setTimeout(r, 1000));
-        set({
-            user: { id: '1', name: 'Demo User', email: _email, role: 'student' },
-            isAuthenticated: true,
-            isLoading: false,
-        });
+        // Simulate network delay
+        await new Promise((r) => setTimeout(r, 800));
+
+        const account = MOCK_ACCOUNTS[email.toLowerCase()];
+
+        if (account && account.password === password) {
+            const user: AuthUser = { id: crypto.randomUUID(), name: account.name, email, role: account.role };
+            const token = `mock_jwt_${Date.now()}`;
+            persistAuth(user, token);
+            set({ user, token, isAuthenticated: true, isLoading: false });
+            return;
+        }
+
+        // Fallback: any email/password combo works, role detected from email
+        const role = detectRole(email);
+        const name = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+        const user: AuthUser = { id: crypto.randomUUID(), name, email, role };
+        const token = `mock_jwt_${Date.now()}`;
+        persistAuth(user, token);
+        set({ user, token, isAuthenticated: true, isLoading: false });
     },
 
     signup: async (name, email, _password, role) => {
         set({ isLoading: true });
-        await new Promise((r) => setTimeout(r, 1000));
-        set({
-            user: { id: '1', name, email, role },
-            isAuthenticated: true,
-            isLoading: false,
-        });
+        await new Promise((r) => setTimeout(r, 800));
+        const user: AuthUser = { id: crypto.randomUUID(), name, email, role: role as UserRole };
+        const token = `mock_jwt_${Date.now()}`;
+        persistAuth(user, token);
+        set({ user, token, isAuthenticated: true, isLoading: false });
     },
 
-    logout: () => set({ user: null, isAuthenticated: false }),
+    logout: () => {
+        clearPersistedAuth();
+        set({ user: null, token: null, isAuthenticated: false });
+    },
+
+    restoreSession: () => {
+        const persisted = getPersistedAuth();
+        if (persisted) {
+            set({ user: persisted.user, token: persisted.token, isAuthenticated: true });
+        }
+    },
 }));
+

@@ -1,0 +1,86 @@
+# Professional Authentication System
+
+Role-based auth with single login page, admin detection, protected routes, and session persistence.
+
+## Proposed Changes
+
+### Auth Store
+
+#### [MODIFY] [index.ts](file:///Users/waleedahmad/ThesisHub/src/stores/index.ts)
+
+Upgrade [AuthStore](file:///Users/waleedahmad/ThesisHub/src/stores/index.ts#111-119) to include:
+- `token` field for JWT simulation
+- `role` shorthand getter
+- localStorage persistence (save/restore on refresh)
+- Mock login that detects role by email domain:
+  - `admin@thesishub.com` → `admin`
+  - `*@company.*` → `company`
+  - `*@university.*` / `*@uni.*` → `university`
+  - Default → `student`
+- [logout()](file:///Users/waleedahmad/ThesisHub/src/stores/index.ts#145-146) clears localStorage and redirects
+
+---
+
+### Protected Route Components
+
+#### [NEW] [ProtectedRoute.tsx](file:///Users/waleedahmad/ThesisHub/src/components/ProtectedRoute.tsx)
+
+If not authenticated → redirect to `/login` (preserving return URL via `?redirect=`)
+
+#### [NEW] [AdminRoute.tsx](file:///Users/waleedahmad/ThesisHub/src/components/AdminRoute.tsx)
+
+If not authenticated → redirect to `/login?redirect=/admin`
+If authenticated but role ≠ admin → redirect to `/dashboard`
+
+---
+
+### Login Page
+
+#### [MODIFY] [LoginPage.tsx](file:///Users/waleedahmad/ThesisHub/src/features/auth/LoginPage.tsx)
+
+- Connect to `useAuthStore.login()`
+- Role-based redirect after login:
+  - `admin` → `/admin`
+  - `company` → `/dashboard/company`
+  - `university` → `/dashboard/university`
+  - `student` → `/dashboard/student`
+- Honor `?redirect=` query param
+- Add subtle footer text: "Admin access is restricted to authorized personnel."
+
+---
+
+### Route Protection in App
+
+#### [MODIFY] [App.tsx](file:///Users/waleedahmad/ThesisHub/src/App.tsx)
+
+- Wrap `/dashboard` routes in `<ProtectedRoute>`
+- Wrap `/admin` routes in `<AdminRoute>`
+
+---
+
+### Admin Topbar (Logout Integration)
+
+#### [MODIFY] [AdminTopbar.tsx](file:///Users/waleedahmad/ThesisHub/src/features/admin/components/AdminTopbar.tsx)
+
+- Connect profile name/role from `useAuthStore`
+- Wire Logout button to `useAuthStore.logout()`
+
+---
+
+## Mock Credentials
+
+| Email | Password | Role |
+|-------|----------|------|
+| `admin@thesishub.com` | `admin123` | Admin |
+| `hr@ericsson.com` | `pass123` | Company |
+| `dean@kth.se` | `pass123` | University |
+| `emma@student.se` | `pass123` | Student |
+
+## Verification Plan
+
+### Browser Tests
+- Login with each mock credential → verify correct redirect
+- Visit `/admin` without auth → verify redirect to `/login`
+- Login as student → visit `/admin` → verify redirect to `/dashboard`
+- Refresh page → verify session persistence
+- Logout → verify state cleared and redirect to `/`
